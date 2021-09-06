@@ -24,7 +24,7 @@
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"
       },
-      "package": "com.linkis.se"
+      "package": "com.linkis.io"
     },
     "web": {
       "favicon": "./assets/favicon.png"

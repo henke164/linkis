@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { View, Text, TextInput, TouchableOpacity, SafeAreaView } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, Clipboard, SafeAreaView } from 'react-native';
 import { navigate } from '../components/RootNavigation';
 import { getThemeStyles } from '../services/themeService';
 import { getMetaData } from '../services/ogScraper';
@@ -9,7 +9,21 @@ const styles = getThemeStyles();
 
 const AddLinkScreen = ({ links, setLinks }) => {
   const [url, setUrl] = React.useState(null);
+  const [isLoading, setIsLoading] = React.useState(false);
   const [urlErrorMessage, setUrlErrorMessage] = React.useState(null);
+
+  React.useEffect(() => {
+    if (!!url) {
+      return;
+    }
+
+    (async () => {
+    const paste = await Clipboard.getString();
+      if (paste.indexOf('https://') > -1) {
+        setUrl(paste);
+      }
+    })();
+  }, []);
 
   const addLink = async function () {
     if (url === null) {
@@ -20,8 +34,12 @@ const AddLinkScreen = ({ links, setLinks }) => {
 
     setUrlErrorMessage(null);
 
+    setIsLoading(true);
+
     const meta = await getMetaData(url);
 
+    setIsLoading(false);
+    
     if (meta === null) {
       setUrl(null);
       setUrlErrorMessage('Meta data not found on url.');
@@ -41,8 +59,31 @@ const AddLinkScreen = ({ links, setLinks }) => {
     
     setLinks([...links]);
 
-    navigate('Home');
+    navigate('Linkis');
   };
+
+  if (isLoading) {
+    return (
+      <SafeAreaView style={styles.view}>
+        <View style={{ flex: 1, padding: 16 }}>
+          <View
+            style={{
+              flex: 1
+            }}>
+            <Text
+              style={styles.header}>
+              Please wait...
+            </Text>
+            
+            <Text
+              style={styles.inputLabel}>
+              Importing metadata from {url}...
+            </Text>
+          </View>
+        </View>
+      </SafeAreaView>
+    );
+  }
 
   return (
     <SafeAreaView style={styles.view}>
@@ -52,7 +93,7 @@ const AddLinkScreen = ({ links, setLinks }) => {
             flex: 1
           }}>
           <Text
-            style={styles.textHeader}>
+            style={styles.inputLabel}>
             Link
           </Text>
           <TextInput

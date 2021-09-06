@@ -42,22 +42,34 @@ export default StyleSheet.create({
     textShadowColor: '#dadada',
     textShadowRadius: 2,
   },
-  browserButtonWrapper: {
-    display: 'flex',
-    flexDirection: 'row',
-    flexWrap: 'nowrap',
-    justifyContent: 'center',
+  searchInput: {
+    width: '100%',
+    borderRadius: 2,
+    padding: 10,
+    backgroundColor: '#161C2A',
+    color: '#fff',
+    textShadowColor: '#dadada',
+    textShadowRadius: 2,
   },
   inputPlaceHolder: {
     color: '#6B6F8B'
   },
-  textHeaderFirst: {
-    fontSize: 10,
-    marginBottom: 15,
-    color: '#7F87BB',
+  settingsButton: {
+    width: '100%',
+    marginTop: 10,
+    paddingTop: 10,
+    paddingBottom: 10,
+    backgroundColor: '#222660',
+    borderRadius: 5,
   },
-  textHeader: {
-    fontSize: 10,
+  header: {
+    fontSize: 24,
+    color: 'white',
+    marginTop: 40,
+    marginBottom:10,
+  },
+  inputLabel: {
+    fontSize: 14,
     marginTop: 20,
     marginBottom: 10,
     color: '#7F87BB',
@@ -67,88 +79,12 @@ export default StyleSheet.create({
     fontSize: 12,
     color: 'red',
   },
-  spinTypeWrapper: {
-    flexDirection: 'row',
-    flexWrap: 'wrap'
-  },
-  spinTypeButton: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    width: 75,
-    height: 75,
-    marginBottom: 10,
-    marginHorizontal: 5,
-    padding: 5,
-    borderRadius: 5,
-    borderBottomLeftRadius: 0,
-    borderBottomRightRadius: 0,
-  },
-  spinTypeHighlight: {
-    borderBottomWidth: 3,
-  },
-  wheelDirectionButtonWrapper: {
-    display: 'flex',
-    flexDirection: 'row',
-    flexWrap: 'nowrap',
-    justifyContent: 'center',
-  },
-  firstWheelDirectionButton: {
-    borderTopLeftRadius: 5,
-    borderBottomLeftRadius: 5,
-  },
-  lastWheelDirectionButton: {
-    borderTopRightRadius: 5,
-    borderBottomRightRadius: 5,
-  },
-  wheelDirectionButton:{
-    flexGrow: 1,
-    paddingTop: 10,
-    paddingBottom: 10,
-    flexBasis: 33,
-    borderWidth: 1,
-    borderColor: '#222660',
-  },
-  highlight: {
-    backgroundColor: '#222660',
-  },
-  highlightText: {
-    color: '#fff',
-    textShadowColor: '#adadad',
-    textShadowRadius: 3,
-    fontSize: 10,
-  },
-  blurred: {
-  },
-  blurredText: {
-    color:'#607BC6',
-    fontSize: 10,
-  },
   button:{
     marginTop: 40,
     paddingTop: 10,
     paddingBottom: 10,
     backgroundColor: '#222660',
     borderRadius: 5,
-  },
-  browserButton:{
-    flexGrow: 1,
-    paddingTop: 10,
-    paddingBottom: 10,
-    flexBasis: 15,
-    borderWidth: 1,
-    borderColor: '#222660',
-  },
-  browserInput: {
-    flexGrow: 1,
-    flexBasis: 70,
-    height: 40,
-    borderRadius: 2,
-    padding: 10,
-    backgroundColor: '#161C2A',
-    color: '#fff',
-    textShadowColor: '#dadada',
-    textShadowRadius: 2,
   },
   buttonText:{
     color: '#fff',
@@ -167,8 +103,6 @@ export default StyleSheet.create({
     flexDirection: 'row',
     paddingTop: 10,
     paddingBottom: 10,
-    borderBottomColor: '#181E32',
-    borderBottomWidth: 0.6,
     height: 80,
     marginBottom: 20,
   },

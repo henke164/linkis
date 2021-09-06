@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React, { useEffect } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { IconButton } from 'react-native-paper';
@@ -28,7 +28,6 @@ function App() {
     console.log("Loading links")
     const loadStoredLinks = async function () {
       const storedLinks = await getStoredLinks();
-      console.log('links:', storedLinks);
       setLinks(storedLinks);
     }
 
@@ -53,7 +52,7 @@ function App() {
           headerTitleAlign: styles.headerTitleStyle.alignSelf,
         }}>
         <RootStack.Group>
-          <RootStack.Screen name="Home" options={{
+          <RootStack.Screen name="Linkis" options={{
             headerRight: () => (
               <IconButton
                 onPress={() => {

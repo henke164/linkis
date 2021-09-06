@@ -2,7 +2,7 @@ import * as React from 'react';
 import { BottomNavigation } from 'react-native-paper';
 import { getThemeStyles } from '../services/themeService';
 
-import LogoutScreen from '../pages/LogoutScreen';
+import SettingsScreen from '../pages/SettingsScreen';
 import BrowseScreen from '../pages/BrowseScreen';
 
 const styles = getThemeStyles();
@@ -10,12 +10,12 @@ const styles = getThemeStyles();
 function BottomNav (props) {
   const [routes] = React.useState([
     { key: 'history', title: 'Browse', icon: 'clipboard-list-outline' },
-    { key: 'logout', title: 'Logout', icon: 'cog' },
+    { key: 'settings', title: 'Settings', icon: 'cog' },
   ]);
 
   const renderScene = BottomNavigation.SceneMap({
     history: () => <BrowseScreen {...props} />,
-    logout: () => <LogoutScreen {...props} />,
+    settings: () => <SettingsScreen {...props} />,
   });
 
   return (

@@ -1,11 +1,13 @@
 import * as React from 'react';
-import { View, Text, Image, SafeAreaView, StatusBar, TouchableOpacity, FlatList, Clipboard } from 'react-native';
+import { View, Text, Image, SafeAreaView, StatusBar, TextInput, TouchableOpacity, FlatList, Clipboard } from 'react-native';
 import { getThemeStyles } from '../services/themeService';
 import Swipeout from 'react-native-swipeout';
 
 const styles = getThemeStyles();
 
 const BrowseScreen = ({ links, setLinks }) => {
+  const [filter, setFilter] = React.useState("");
+
   async function play(link) {
     Clipboard.setString(link.url);
   }
@@ -18,8 +20,7 @@ const BrowseScreen = ({ links, setLinks }) => {
       backgroundColor: 'red',
       underlayColor: 'rgba(0, 0, 0, 1, 0.6)',
       onPress: () => { 
-        const idx = links.map(l => l.time).indexOf(link.time);  
-        console.log("Deleted", link.time);
+        const idx = links.map(l => l.time).indexOf(link.time);
         links.splice(idx, 1);
         setLinks([...links]);
       }
@@ -50,7 +51,16 @@ const BrowseScreen = ({ links, setLinks }) => {
   return (
     <SafeAreaView style={styles.view}>
       <StatusBar backgroundColor={styles.statusBar.backgroundColor}></StatusBar>
-      <View style={{ flex: 1, padding: 16 }}>
+      <TextInput
+        autoCorrect={false}
+        autoCompleteType='off'
+        style={styles.searchInput}
+        placeholderTextColor={styles.inputPlaceHolder.color}
+        onChangeText={setFilter}
+        value={filter}
+        placeholder="Search"
+      />
+      <View style={{ flex: 1, paddingHorizontal: 10 }}>
         <View
           style={{
             flex: 1,
@@ -58,7 +68,7 @@ const BrowseScreen = ({ links, setLinks }) => {
           }}>
           
           <FlatList
-            data={links}
+            data={links.filter(l => l.title.toLowerCase().indexOf(filter.toLowerCase()) > -1)}
             renderItem={renderRow}
             keyExtractor={item => item.time.toString()}
           />
