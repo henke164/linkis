@@ -27,7 +27,6 @@ function BottomNav (props) {
       onIndexChange={(i) => props.setSceneIndex(i)}
       renderScene={renderScene}
     />
-
   );
 };
 

@@ -1,4 +1,5 @@
 import * as React from 'react';
+import Toast from 'react-native-toast-message';
 import { View, Text, Image, SafeAreaView, StatusBar, TextInput, TouchableOpacity, FlatList, Clipboard } from 'react-native';
 import { getThemeStyles } from '../services/themeService';
 import Swipeout from 'react-native-swipeout';
@@ -10,6 +11,10 @@ const BrowseScreen = ({ links, setLinks }) => {
 
   async function play(link) {
     Clipboard.setString(link.url);
+    Toast.show({
+      text1: 'Link added to clipboard',
+      text2: link.url
+    });
   }
 
   function renderRow(data) {
@@ -28,8 +33,8 @@ const BrowseScreen = ({ links, setLinks }) => {
     
     return (
       <Swipeout right={swipeBtns}
-      autoClose={true}
-      backgroundColor= 'transparent'>
+        autoClose={true}
+        backgroundColor= 'transparent'>
         <TouchableOpacity
           underlayColor='rgba(192,192,192,1,0.6)'
           onPress={() => play(link)} >
@@ -74,6 +79,7 @@ const BrowseScreen = ({ links, setLinks }) => {
           />
         </View>
       </View>
+      <Toast ref={(ref) => Toast.setRef(ref)}></Toast>
     </SafeAreaView>
   );
 };

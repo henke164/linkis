@@ -18,7 +18,7 @@ const AddLinkScreen = ({ links, setLinks }) => {
     }
 
     (async () => {
-    const paste = await Clipboard.getString();
+      const paste = await Clipboard.getString();
       if (paste.indexOf('https://') > -1) {
         setUrl(paste);
       }
@@ -29,6 +29,14 @@ const AddLinkScreen = ({ links, setLinks }) => {
     if (url === null) {
       setUrl(null);
       setUrlErrorMessage('Enter a valid link.');
+      return;
+    }
+
+    const exists = links.map(l => l.url).indexOf(url) > -1;
+
+    if (exists) {
+      setUrl(null);
+      setUrlErrorMessage('Url already added!');
       return;
     }
 

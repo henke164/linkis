@@ -4,10 +4,8 @@ import { createStackNavigator } from '@react-navigation/stack';
 import { IconButton } from 'react-native-paper';
 import { navigationRef, navigate } from './components/RootNavigation';
 import BottomNav from './components/BottomNav';
-
 import AddLinkScreen from './pages/AddLinkScreen';
 import LoginScreen from './pages/LoginScreen';
-
 import { getThemeStyles } from './services/themeService';
 import { getStoredLinks } from './services/storage';
 
