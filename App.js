@@ -20,7 +20,7 @@ function App() {
   
   useEffect(() => {
     if (!loggedIn) {
-      //return;
+      return;
     }
 
     console.log("Loading links")
@@ -35,7 +35,7 @@ function App() {
   console.log('render');
 
   if (loggedIn === false) {
-    //return <LoginScreen setLoggedIn={setLoggedIn}></LoginScreen>;
+    return <LoginScreen setLoggedIn={setLoggedIn}></LoginScreen>;
   }
 
   return (
