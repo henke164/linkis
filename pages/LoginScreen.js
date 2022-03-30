@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import { View, Text, TextInput, TouchableOpacity, SafeAreaView } from 'react-native';
 import { getThemeStyles } from '../services/themeService';
 import { setPassword, removePassword, getPassword, setStoredLinks } from '../services/storage';
+import Toast from 'react-native-toast-message';
 
 const styles = getThemeStyles();
 
@@ -32,6 +33,11 @@ const LoginScreen = ({ setLoggedIn }) => {
   function login() {
     if (keyWord === pword) {
       setLoggedIn(true);
+    } else {
+      Toast.show({
+        text1: 'Login failed',
+        text2: 'Wrong password'
+      });
     }
   }
 
@@ -72,14 +78,15 @@ const LoginScreen = ({ setLoggedIn }) => {
           
           {pword !== null && (
             <TouchableOpacity
-              style={styles.button}
+              style={styles.linkButton}
               onPress={clearData}
               underlayColor='#fff'>
-              <Text style={styles.buttonText}>Reset Data</Text>
+              <Text style={styles.linkButtonText}>Clear all data and reset app</Text>
             </TouchableOpacity>
           )}
         </View>
       </View>
+      <Toast></Toast>
     </SafeAreaView>
   );
 };

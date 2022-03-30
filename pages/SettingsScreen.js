@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { View, Text, SafeAreaView, TouchableOpacity, TextInput, Clipboard, Alert } from 'react-native';
+import { View, Text, SafeAreaView, Clipboard, TouchableOpacity, TextInput, Alert } from 'react-native';
 import { getThemeStyles } from '../services/themeService';
 import { getExportString, getImportStringDetails, setStoredLinks } from '../services/storage';
 

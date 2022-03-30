@@ -7,13 +7,22 @@ async function getMetaData(url) {
       }
     });
     const html = await res.text();
-    const image = /<meta.*property="og:image*".*content="([^"]+)".*(\/)?>/.exec(html)[1];
-    const title = /<meta.*property="og:title*".*content="([^"]+)".*(\/)?>/.exec(html)[1];
-    return {
-      title,
-      image,
+    
+    let titleRegex = /<meta.*?name="title".*?content="(.*?)".*?>/.exec(html);
+    if (!titleRegex) {
+      titleRegex = /<meta.*?property="og:title".*?content="(.*?)".*?>/.exec(html);
     }
-  } catch {
+
+    const imageRegex = /<meta.*?property="og:image".*?content="(.*?)".*?>/.exec(html);
+    const videoRegex = /<meta.*property="og:video:url*".*content="([^"]+)".*(\/)?>/.exec(html);
+
+    return {
+      title: titleRegex && titleRegex.length > 1 ? titleRegex[1] : 'Untitled',
+      image: imageRegex && imageRegex.length > 1 ? imageRegex[1] : undefined,
+      video: videoRegex && videoRegex.length > 1 ? videoRegex[1] : undefined,
+    }
+  } catch(e) {
+    console.log('Failed to fetch meta data', e.message);
     return null;
   }
 }

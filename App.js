@@ -1,11 +1,14 @@
 import React, { useEffect } from 'react';
+import { Clipboard } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { IconButton } from 'react-native-paper';
 import { navigationRef, navigate } from './components/RootNavigation';
 import BottomNav from './components/BottomNav';
 import AddLinkScreen from './pages/AddLinkScreen';
+import BrowserScreen from './pages/BrowserScreen';
 import LoginScreen from './pages/LoginScreen';
+import Toast from 'react-native-toast-message';
 import { getThemeStyles } from './services/themeService';
 import { getStoredLinks } from './services/storage';
 
@@ -23,7 +26,6 @@ function App() {
       return;
     }
 
-    console.log("Loading links")
     const loadStoredLinks = async function () {
       const storedLinks = await getStoredLinks();
       setLinks(storedLinks);
@@ -73,6 +75,25 @@ function App() {
         <RootStack.Group>
           <RootStack.Screen name="Add link">
             {() => <AddLinkScreen links={links} setLinks={setLinks} />}
+          </RootStack.Screen>
+          <RootStack.Screen name="Browser" options={{
+            headerRight: () => (
+              <IconButton
+                onPress={() => {
+                  const route = navigationRef.getCurrentRoute();
+                  const { url } = route.params;
+                  Clipboard.setString(url);
+                  Toast.show({
+                    text1: 'Link added to clipboard',
+                    text2: url
+                  });
+                }}
+                icon="content-copy"
+                color={styles.headerRight.color}
+              />
+            ),
+          }}>
+            {(params) => <BrowserScreen url={params.route.params.url} />}
           </RootStack.Screen>
         </RootStack.Group>
       </RootStack.Navigator>

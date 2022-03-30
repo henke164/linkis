@@ -1,8 +1,9 @@
 import * as React from 'react';
 import Toast from 'react-native-toast-message';
-import { View, Text, Image, SafeAreaView, StatusBar, TextInput, TouchableOpacity, FlatList, Clipboard } from 'react-native';
+import { View, Text, Image, SafeAreaView, StatusBar, Clipboard, TextInput, TouchableOpacity, FlatList } from 'react-native';
 import { getThemeStyles } from '../services/themeService';
 import Swipeout from 'react-native-swipeout';
+import { navigate } from '../components/RootNavigation';
 
 const styles = getThemeStyles();
 
@@ -10,6 +11,11 @@ const BrowseScreen = ({ links, setLinks }) => {
   const [filter, setFilter] = React.useState("");
 
   async function play(link) {
+    if (link.video) {
+      navigate('Browser', { url: link.video });
+      return;
+    }
+
     Clipboard.setString(link.url);
     Toast.show({
       text1: 'Link added to clipboard',
@@ -47,6 +53,15 @@ const BrowseScreen = ({ links, setLinks }) => {
                   <Text style={styles.linkDateText}>{new Date(link.time).toLocaleDateString()}</Text>
                 </View>
               </View>
+      
+              {link.video ?
+                <View style={styles.linkVideoTagWrapper}>
+                  <Text style={styles.linkTagText}>Video</Text>
+                </View> :
+                <View style={styles.linkUrlTagWrapper}>
+                  <Text style={styles.linkTagText}>Url</Text>
+                </View>
+              }
             </View>
         </TouchableOpacity>
       </Swipeout>
@@ -79,7 +94,7 @@ const BrowseScreen = ({ links, setLinks }) => {
           />
         </View>
       </View>
-      <Toast ref={(ref) => Toast.setRef(ref)}></Toast>
+      <Toast></Toast>
     </SafeAreaView>
   );
 };

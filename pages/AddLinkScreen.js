@@ -18,6 +18,7 @@ const AddLinkScreen = ({ links, setLinks }) => {
     }
 
     (async () => {
+      console.log(Clipboard.getString());
       const paste = await Clipboard.getString();
       if (paste.indexOf('https://') > -1) {
         setUrl(paste);
@@ -59,8 +60,7 @@ const AddLinkScreen = ({ links, setLinks }) => {
     links.push({
       url,
       time: Date.now(),
-      image: meta.image,
-      title: meta.title
+      ...meta
     });
 
     await setStoredLinks(links);
