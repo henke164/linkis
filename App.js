@@ -6,7 +6,7 @@ import { IconButton } from 'react-native-paper';
 import { navigationRef, navigate } from './components/RootNavigation';
 import BottomNav from './components/BottomNav';
 import AddLinkScreen from './pages/AddLinkScreen';
-import BrowserScreen from './pages/BrowserScreen';
+import WebBrowserScreen from './pages/WebBrowserScreen';
 import LoginScreen from './pages/LoginScreen';
 import Toast from 'react-native-toast-message';
 import { getThemeStyles } from './services/themeService';
@@ -33,8 +33,6 @@ function App() {
 
     loadStoredLinks();
   }, [loggedIn]);
-
-  console.log('render');
 
   if (loggedIn === false) {
     return <LoginScreen setLoggedIn={setLoggedIn}></LoginScreen>;
@@ -93,7 +91,7 @@ function App() {
               />
             ),
           }}>
-            {(params) => <BrowserScreen url={params.route.params.url} />}
+            {(params) => <WebBrowserScreen url={params.route.params.url} />}
           </RootStack.Screen>
         </RootStack.Group>
       </RootStack.Navigator>

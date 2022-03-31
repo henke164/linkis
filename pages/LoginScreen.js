@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { View, Text, TextInput, TouchableOpacity, SafeAreaView } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, SafeAreaView, Alert, Image } from 'react-native';
 import { getThemeStyles } from '../services/themeService';
 import { setPassword, removePassword, getPassword, setStoredLinks } from '../services/storage';
 import Toast from 'react-native-toast-message';
@@ -13,7 +13,6 @@ const LoginScreen = ({ setLoggedIn }) => {
   useEffect(() => {
     (async function () {
       const pw = await getPassword();
-      console.log('password:', pw);
       setPword(pw);
     })();
   }, []);
@@ -25,9 +24,16 @@ const LoginScreen = ({ setLoggedIn }) => {
   }
 
   async function clearData() {
-    await removePassword();
-    await setStoredLinks([]);
-    setPword(null);
+    Alert.prompt("Clear all data", "All your data will be lost. Enter 'delete' to continue.", async (input) => {
+      if (input.toLowerCase() !== "delete") {
+        Alert.alert("Data was not cleared", "You did not write 'delete'...");
+        return;
+      }
+      await removePassword();
+      await setStoredLinks([]);
+      setPword(null);
+      Alert.alert("Data successfully cleared!", "");
+    });
   }
   
   function login() {
@@ -44,14 +50,27 @@ const LoginScreen = ({ setLoggedIn }) => {
   return (
     <SafeAreaView style={styles.view}>
       <View style={{ flex: 1, padding: 16 }}>
-        <View
-          style={{
-            flex: 1
-          }}>
-            <Text
+        <View style={{ flex: 1 }}>
+          <View style={{ marginVertical: 50, height: 100, alignItems: 'center' }}>
+            <Image
+              style={{ height: 100 }}
+              height={100}
+              width={200}
+              source={require('../assets/icon.png')}
+            />
+          </View>
+          <Text
             style={styles.header}>
-            {pword === null ? 'Register' : 'Log in'}
+            {pword === null ? 'Register' : 'Login'}
           </Text>
+          {
+            !pword && (
+              <Text style={styles.inputLabel}>
+                Enter your secret password. This password will be required in the future to access your list. If you forget
+                your password, you will have to reset all data.
+              </Text>
+            )
+          }
           <Text
             style={styles.inputLabel}>
             Enter code:
@@ -59,6 +78,7 @@ const LoginScreen = ({ setLoggedIn }) => {
           <TextInput
             autoCorrect={false}
             autoCompleteType='off'
+            secureTextEntry={true}
             style={styles.input}
             placeholderTextColor={styles.inputPlaceHolder.color}
             onChangeText={text => {
@@ -66,14 +86,13 @@ const LoginScreen = ({ setLoggedIn }) => {
             }}
             value={keyWord}
             placeholder=""
-            keyboardType="numeric"
           />
 
           <TouchableOpacity
             style={styles.button}
             onPress={pword === null ? register : login}
             underlayColor='#fff'>
-            <Text style={styles.buttonText}>Enter</Text>
+            <Text style={styles.buttonText}>{pword === null ? 'Register' : 'Enter'}</Text>
           </TouchableOpacity>
           
           {pword !== null && (

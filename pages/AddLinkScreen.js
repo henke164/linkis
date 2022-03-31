@@ -18,7 +18,6 @@ const AddLinkScreen = ({ links, setLinks }) => {
     }
 
     (async () => {
-      console.log(Clipboard.getString());
       const paste = await Clipboard.getString();
       if (paste.indexOf('https://') > -1) {
         setUrl(paste);

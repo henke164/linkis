@@ -9,7 +9,7 @@ const styles = getThemeStyles();
 
 function BottomNav (props) {
   const [routes] = React.useState([
-    { key: 'history', title: 'Browse', icon: 'clipboard-list-outline' },
+    { key: 'history', title: 'Links', icon: 'clipboard-list-outline' },
     { key: 'settings', title: 'Settings', icon: 'cog' },
   ]);
 

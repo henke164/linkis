@@ -3,18 +3,18 @@ async function getMetaData(url) {
   try {
     const res = await fetch(url, {
       headers: {
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/93.0.4577.63 Safari/537.36'
+        'User-Agent': 'Mozilla/5.0 (compatible; Linkisbot/2.1)'
       }
     });
     const html = await res.text();
     
-    let titleRegex = /<meta.*?name="title".*?content="(.*?)".*?>/.exec(html);
+    let titleRegex = /<title>(.*?)<\/title>/.exec(html);
     if (!titleRegex) {
       titleRegex = /<meta.*?property="og:title".*?content="(.*?)".*?>/.exec(html);
     }
 
     const imageRegex = /<meta.*?property="og:image".*?content="(.*?)".*?>/.exec(html);
-    const videoRegex = /<meta.*property="og:video:url*".*content="([^"]+)".*(\/)?>/.exec(html);
+    const videoRegex = /<meta.*?property="og:video:url".*?content="(.*?)".*?>/.exec(html);
 
     return {
       title: titleRegex && titleRegex.length > 1 ? titleRegex[1] : 'Untitled',

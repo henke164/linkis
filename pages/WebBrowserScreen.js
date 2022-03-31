@@ -6,7 +6,8 @@ import Toast from 'react-native-toast-message';
 
 const styles = getThemeStyles();
 
-const BrowserScreen = ({ url }) => {
+const WebBrowserScreen = ({ url }) => {
+  console.log(url);
   return (
     <SafeAreaView style={styles.view}>
       <View style={{ flex: 1, padding: 16 }}>
@@ -24,4 +25,4 @@ const BrowserScreen = ({ url }) => {
   );
 };
 
-export default BrowserScreen;
+export default WebBrowserScreen;

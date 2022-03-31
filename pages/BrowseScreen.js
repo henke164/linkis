@@ -78,7 +78,7 @@ const BrowseScreen = ({ links, setLinks }) => {
         placeholderTextColor={styles.inputPlaceHolder.color}
         onChangeText={setFilter}
         value={filter}
-        placeholder="Search"
+        placeholder="Filter..."
       />
       <View style={{ flex: 1, paddingHorizontal: 10 }}>
         <View
@@ -87,6 +87,23 @@ const BrowseScreen = ({ links, setLinks }) => {
             marginTop: 20,
           }}>
           
+          {links.length === 0 && (
+            <View>
+              <Text style={{ color: 'white', margin: 10, fontSize: 18 }}>
+                You have not added any links.
+              </Text>
+              <Text style={{ color: 'white', margin: 10 }}>
+                Press the "Plus" icon on the top right to add a link. If you have the link in your clipboard it will be 
+                pasted automatically in the input.
+              </Text>
+              <Text style={{ color: 'white', margin: 10 }}>
+                Links that contain videos will be playable in the app, other links will be copied to the clipboard.
+              </Text>
+              <Text style={{ color: 'white', margin: 10 }}>
+                To delete links, just swipe it to the left, and press 'Delete'.
+              </Text>
+            </View>
+          )}
           <FlatList
             data={links.filter(l => l.title.toLowerCase().indexOf(filter.toLowerCase()) > -1)}
             renderItem={renderRow}
