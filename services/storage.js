@@ -89,7 +89,6 @@ async function setPassword(password) {
 
 async function getPassword() {
   try {
-    console.log("Getting password...")
     const value = await AsyncStorage.getItem('password');
     return value;
   } catch (error) {

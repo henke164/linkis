@@ -53,9 +53,8 @@ const LoginScreen = ({ setLoggedIn }) => {
         <View style={{ flex: 1 }}>
           <View style={{ marginVertical: 50, height: 100, alignItems: 'center' }}>
             <Image
-              style={{ height: 100 }}
+              style={{ height: 100, width: 100, }}
               height={100}
-              width={200}
               source={require('../assets/icon.png')}
             />
           </View>
