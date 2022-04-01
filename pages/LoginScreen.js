@@ -24,16 +24,20 @@ const LoginScreen = ({ setLoggedIn }) => {
   }
 
   async function clearData() {
-    Alert.prompt("Clear all data", "All your data will be lost. Enter 'delete' to continue.", async (input) => {
-      if (input.toLowerCase() !== "delete") {
-        Alert.alert("Data was not cleared", "You did not write 'delete'...");
-        return;
-      }
-      await removePassword();
-      await setStoredLinks([]);
-      setPword(null);
-      Alert.alert("Data successfully cleared!", "");
-    });
+    Alert.alert('Clear all data?', 'All your data will be lost. Are you sure?', [
+      {
+        text: 'Cancel',
+        onPress: () => console.log('Cancel Pressed'),
+        style: 'cancel',
+      },
+      {
+        text: 'OK', onPress: async () => {
+          await removePassword();
+          await setStoredLinks([]);
+          setPword(null);
+        }
+      },
+    ]);
   }
   
   function login() {
@@ -51,10 +55,11 @@ const LoginScreen = ({ setLoggedIn }) => {
     <SafeAreaView style={styles.view}>
       <View style={{ flex: 1, padding: 16 }}>
         <View style={{ flex: 1 }}>
-          <View style={{ marginVertical: 50, height: 100, alignItems: 'center' }}>
+          <View style={{ marginVertical: 50, height: 50, alignItems: 'center' }}>
             <Image
-              style={{ height: 100, width: 100, }}
+              style={{ width: 200, height: 100 }}
               height={100}
+              width={100}
               source={require('../assets/icon.png')}
             />
           </View>
