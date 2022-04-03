@@ -5,8 +5,9 @@ import { getExportString, getImportStringDetails, setStoredLinks } from '../serv
 
 const styles = getThemeStyles();
 
-const SettingsScreen = ({ links, setLinks, setLoggedIn}) => {
-  const [importStr, setImportStr] = React.useState("");
+const SettingsScreen = ({ links, setLinks, setLoggedIn, secret}) => {
+  const [importCipher, setImportCipher] = React.useState("");
+  const [importSecret, setImportSecret] = React.useState("");
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: '#121212' }}>
@@ -24,18 +25,29 @@ const SettingsScreen = ({ links, setLinks, setLoggedIn}) => {
             autoCompleteType='off'
             style={styles.input}
             placeholderTextColor={styles.inputPlaceHolder.color}
-            onChangeText={setImportStr}
-            value={importStr}
+            onChangeText={setImportCipher}
+            value={importCipher}
             placeholder="Enter import string"
+          />
+          
+          <TextInput
+            autoCorrect={false}
+            autoCompleteType='off'
+            style={styles.input}
+            placeholderTextColor={styles.inputPlaceHolder.color}
+            onChangeText={setImportSecret}
+            value={importSecret}
+            secureTextEntry={true}
+            placeholder="Enter import password"
           />
 
           <TouchableOpacity
             style={styles.settingsButton}
             onPress={async () => {
-              const details = getImportStringDetails(importStr);
+              const details = getImportStringDetails(importCipher, importSecret);
               
               if (!details.success) {
-                Alert.alert("Import string does not contain any links");
+                Alert.alert("Failed to import!", "Either the import password is wrong or the string does not contain any links");
                 return;
               }
 
@@ -60,7 +72,7 @@ const SettingsScreen = ({ links, setLinks, setLoggedIn}) => {
                     }
 
                     const result = [...links, ...newLinks];
-                    await setStoredLinks(result);
+                    await setStoredLinks(result, secret);
                     setLinks([...result]);
                   }
                 },
@@ -80,9 +92,9 @@ const SettingsScreen = ({ links, setLinks, setLoggedIn}) => {
           <TouchableOpacity
             style={styles.settingsButton}
             onPress={async () => {
-              const exportString = await getExportString();
+              const exportString = await getExportString(secret);
               Clipboard.setString(exportString);
-              Alert.alert("Import string added to clipboard!");
+              Alert.alert("Import string added to clipboard!", "Your current password is the 'Import password'");
             }}
             underlayColor='#fff'>
             <Text style={styles.buttonText}>Export</Text>
