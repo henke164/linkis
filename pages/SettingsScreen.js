@@ -46,6 +46,9 @@ const SettingsScreen = ({ links, setLinks, setLoggedIn, secret}) => {
             onPress={async () => {
               const details = getImportStringDetails(importCipher, importSecret);
               
+              setImportCipher("");
+              setImportSecret("");
+              
               if (!details.success) {
                 Alert.alert("Failed to import!", "Either the import password is wrong or the string does not contain any links");
                 return;

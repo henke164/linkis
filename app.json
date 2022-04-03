@@ -2,7 +2,7 @@
   "expo": {
     "name": "linkis",
     "slug": "linkis",
-    "version": "1.0.1",
+    "version": "1.1.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "splash": {
@@ -25,7 +25,9 @@
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#071119"
       },
-      "package": "com.linkis.io"
+      "permissions": [],
+      "package": "com.linkis.io",
+      "versionCode": 3
     },
     "web": {
       "favicon": "./assets/favicon.png"

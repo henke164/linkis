@@ -22,19 +22,15 @@ function App() {
   const [secret, setSecret] = React.useState(null);
 
   function onSecretChanged(newSecret) {
-    console.log('Secret changed', secret);
     setSecret(null);
     setSecret(newSecret);
   }
 
   useEffect(() => {
-    console.log('Secret changed', secret);
     if (!secret) {
-      console.log('No secret :(');
       return;
     }
 
-    console.log("Loading stored links...");
     getStoredLinks(secret).then(storedLinks => {
       if (storedLinks !== null) {
         setLinks(storedLinks);
@@ -91,11 +87,11 @@ function App() {
               <IconButton
                 onPress={() => {
                   const route = navigationRef.getCurrentRoute();
-                  const { url } = route.params;
-                  Clipboard.setString(url);
+                  const { link } = route.params;
+                  Clipboard.setString(link.url);
                   Toast.show({
                     text1: 'Link added to clipboard',
-                    text2: url
+                    text2: link.url
                   });
                 }}
                 icon="content-copy"
@@ -103,7 +99,7 @@ function App() {
               />
             ),
           }}>
-            {(params) => <WebBrowserScreen url={params.route.params.url} />}
+            {(params) => <WebBrowserScreen link={params.route.params.link} />}
           </RootStack.Screen>
         </RootStack.Group>
       </RootStack.Navigator>

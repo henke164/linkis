@@ -25,19 +25,14 @@ async function setStoredLinks(links, password) {
     await AsyncStorage.removeItem('links');
     return;
   }
-  console.log("Saving link...", {
-    links,
-    password
-  });
+
   try {
     const ciphertext = CryptoJS.AES.encrypt(JSON.stringify(links), password).toString();
     await AsyncStorage.setItem(
       'links',
       ciphertext
     );
-    console.log("Link saved!");
   } catch (error) {
-    console.log("Error saving link");
     console.error(error);
   }
 };
@@ -52,7 +47,6 @@ function getLinksFromCypher(cipher, secret) {
 async function getStoredLinks(secret) {
   try {
     const ciphertext = await AsyncStorage.getItem('links');
-    console.log('cipher', ciphertext);
     if (ciphertext !== null) {
       const links = getLinksFromCypher(ciphertext, secret);
       if (!links) {
@@ -64,7 +58,6 @@ async function getStoredLinks(secret) {
     console.log("Error");
     console.log(error);
   }
-  console.log('No stored links...');
   return null;
 };
 

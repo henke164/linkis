@@ -11,16 +11,7 @@ const BrowseScreen = ({ links, setLinks }) => {
   const [filter, setFilter] = React.useState("");
 
   async function play(link) {
-    if (link.video) {
-      navigate('WebBrowser', { url: link.video });
-      return;
-    }
-
-    Clipboard.setString(link.url);
-    Toast.show({
-      text1: 'Link added to clipboard',
-      text2: link.url
-    });
+    navigate('WebBrowser', { link });
   }
 
   function renderRow(data) {

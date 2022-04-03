@@ -12,15 +12,14 @@ const LoginScreen = ({ setSecret }) => {
 
   React.useEffect(() => {
     hasStoredData().then(res => {
-      console.log('has stored data', res);
       setIsNewUser(!res);
+      setSecretInput("");
     });
   }, []);
 
   async function login() {
     const isValid = await isValidLogin(secretInput);
     if (isValid) {
-      console.log('Setting secret', secretInput);
       setSecret(secretInput);
     } else {
       Toast.show({
@@ -86,7 +85,7 @@ const LoginScreen = ({ setSecret }) => {
           <TextInput
             autoCorrect={false}
             autoCompleteType='off'
-            secureTextEntry={true}
+            secureTextEntry={!isNewUser}
             style={styles.input}
             placeholderTextColor={styles.inputPlaceHolder.color}
             onChangeText={text => {

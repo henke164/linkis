@@ -1,3 +1,7 @@
+function isSWFVideo(url) {
+  return url.toLowerCase().includes('.swf');
+}
+
 async function getMetaData(url) {
   console.log("Fetching meta data", url);
   try {
@@ -14,13 +18,25 @@ async function getMetaData(url) {
     }
 
     const imageRegex = /<meta.*?property="og:image".*?content="(.*?)".*?>/.exec(html);
-    const videoRegex = /<meta.*?property="og:video:url".*?content="(.*?)".*?>/.exec(html);
+    
+    let videoRegex = /<meta.*?property="og:video:url".*?content="(.*?)".*?>/.exec(html);
+    if (!videoRegex) {
+      console.log('Try og video');
+      videoRegex = /<meta.*?property="og:video".*?content="(.*?)".*?>/.exec(html);
+    }
 
-    return {
+    const result = {
       title: titleRegex && titleRegex.length > 1 ? titleRegex[1] : 'Untitled',
       image: imageRegex && imageRegex.length > 1 ? imageRegex[1] : undefined,
       video: videoRegex && videoRegex.length > 1 ? videoRegex[1] : undefined,
     }
+
+    if (result.video && isSWFVideo(result.video)) {
+      console.log("Detected SWF. Removing video");
+      delete result.video;
+    }
+
+    return result;
   } catch(e) {
     console.log('Failed to fetch meta data', e.message);
     return null;
