@@ -1,26 +1,38 @@
 import React, { useEffect } from 'react';
 import { View, Text, TextInput, TouchableOpacity, SafeAreaView, Alert, Image } from 'react-native';
 import { getThemeStyles } from '../services/themeService';
-import { setPassword, removePassword, getPassword, setStoredLinks } from '../services/storage';
+import { isValidLogin, setStoredLinks, hasStoredData } from '../services/storage';
 import Toast from 'react-native-toast-message';
 
 const styles = getThemeStyles();
 
-const LoginScreen = ({ setLoggedIn }) => {
-  const [keyWord, setKeyword] = React.useState(null);
-  const [pword, setPword] = React.useState(null);
+const LoginScreen = ({ setSecret }) => {
+  const [secretInput, setSecretInput] = React.useState(null);
+  const [isNewUser, setIsNewUser] = React.useState(null);
 
-  useEffect(() => {
-    (async function () {
-      const pw = await getPassword();
-      setPword(pw);
-    })();
+  React.useEffect(() => {
+    hasStoredData().then(res => {
+      console.log('has stored data', res);
+      setIsNewUser(!res);
+    });
   }, []);
 
+  async function login() {
+    const isValid = await isValidLogin(secretInput);
+    if (isValid) {
+      console.log('Setting secret', secretInput);
+      setSecret(secretInput);
+    } else {
+      Toast.show({
+        text1: 'Login failed',
+        text2: 'Could not decrypt the link list with that password.'
+      });
+    }
+  }
+
   async function register() {
-    await setPassword(keyWord);
-    await setStoredLinks([]);
-    setLoggedIn(true);
+    await setStoredLinks([], secretInput);
+    await setSecret(secretInput);
   }
 
   async function clearData() {
@@ -32,25 +44,13 @@ const LoginScreen = ({ setLoggedIn }) => {
       },
       {
         text: 'OK', onPress: async () => {
-          await removePassword();
-          await setStoredLinks([]);
-          setPword(null);
+          await setStoredLinks(null);
+          setIsNewUser(true);
         }
       },
     ]);
   }
   
-  function login() {
-    if (keyWord === pword) {
-      setLoggedIn(true);
-    } else {
-      Toast.show({
-        text1: 'Login failed',
-        text2: 'Wrong password'
-      });
-    }
-  }
-
   return (
     <SafeAreaView style={styles.view}>
       <View style={{ flex: 1, padding: 16 }}>
@@ -65,19 +65,23 @@ const LoginScreen = ({ setLoggedIn }) => {
           </View>
           <Text
             style={styles.header}>
-            {pword === null ? 'Register' : 'Login'}
+            {isNewUser ? 'Register' : 'Login'}
           </Text>
           {
-            !pword && (
-              <Text style={styles.inputLabel}>
-                Enter your secret password. This password will be required in the future to access your list. If you forget
-                your password, you will have to reset all data.
-              </Text>
+            isNewUser && (
+              <View>
+                <Text style={styles.inputLabel}>
+                  The password will be the encryption key for your stored data.
+                </Text>
+                <Text style={styles.inputLabel}>
+                  If you forget your password, you will have to reset all data.
+                </Text>
+              </View>
             )
           }
           <Text
             style={styles.inputLabel}>
-            Enter code:
+            Enter password:
           </Text>
           <TextInput
             autoCorrect={false}
@@ -86,20 +90,21 @@ const LoginScreen = ({ setLoggedIn }) => {
             style={styles.input}
             placeholderTextColor={styles.inputPlaceHolder.color}
             onChangeText={text => {
-              setKeyword(text);
+              setSecretInput(text);
             }}
-            value={keyWord}
+            onSubmitEditing={isNewUser ? register : login}
+            value={secretInput}
             placeholder=""
           />
 
           <TouchableOpacity
             style={styles.button}
-            onPress={pword === null ? register : login}
+            onPress={isNewUser ? register : login}
             underlayColor='#fff'>
-            <Text style={styles.buttonText}>{pword === null ? 'Register' : 'Enter'}</Text>
+            <Text style={styles.buttonText}>{isNewUser ? 'Register' : 'Login'}</Text>
           </TouchableOpacity>
           
-          {pword !== null && (
+          {!isNewUser && (
             <TouchableOpacity
               style={styles.linkButton}
               onPress={clearData}

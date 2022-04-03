@@ -19,22 +19,34 @@ function App() {
   const [sceneIndex, setSceneIndex] = React.useState(0);
   const [loggedIn, setLoggedIn] = React.useState(false);
   const [links, setLinks] = React.useState([]);
-  
+  const [secret, setSecret] = React.useState(null);
+
+  function onSecretChanged(newSecret) {
+    console.log('Secret changed', secret);
+    setSecret(null);
+    setSecret(newSecret);
+  }
+
   useEffect(() => {
-    if (!loggedIn) {
+    console.log('Secret changed', secret);
+    if (!secret) {
+      console.log('No secret :(');
       return;
     }
 
-    const loadStoredLinks = async function () {
-      const storedLinks = await getStoredLinks();
-      setLinks(storedLinks);
-    }
-
-    loadStoredLinks();
-  }, [loggedIn]);
+    console.log("Loading stored links...");
+    getStoredLinks(secret).then(storedLinks => {
+      if (storedLinks !== null) {
+        setLinks(storedLinks);
+        setLoggedIn(true);
+      } else {
+        setLoggedIn(false);
+      }
+    });
+  }, [secret]);
 
   if (loggedIn === false) {
-    return <LoginScreen setLoggedIn={setLoggedIn}></LoginScreen>;
+    return <LoginScreen setSecret={onSecretChanged}></LoginScreen>;
   }
 
   return (
@@ -61,6 +73,7 @@ function App() {
             ),
           }}>
             {() => <LinkisView
+              secret={secret}
               sceneIndex={sceneIndex}
               setSceneIndex={setSceneIndex}
               links={links}
@@ -71,7 +84,7 @@ function App() {
         </RootStack.Group>
         <RootStack.Group>
           <RootStack.Screen name="Add link">
-            {() => <AddLinkScreen links={links} setLinks={setLinks} />}
+            {() => <AddLinkScreen links={links} setLinks={setLinks} secret={secret} />}
           </RootStack.Screen>
           <RootStack.Screen name="WebBrowser" options={{
             headerRight: () => (

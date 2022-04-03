@@ -1,34 +1,9 @@
+import CryptoJS from "crypto-js";
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import base64 from 'react-native-base64';
 
-function cipher(text, salt) {
-  const textToChars = text => text.split('').map(c => c.charCodeAt(0));
-  const byteHex = n => ("0" + Number(n).toString(16)).substr(-2);
-  const applySaltToChar = code => textToChars(salt).reduce((a,b) => a ^ b, code);
-
-  return text.split('')
-    .map(textToChars)
-    .map(applySaltToChar)
-    .map(byteHex)
-    .join('');
-}
-  
-function decipher(encoded, salt) {
-  const textToChars = text => text.split('').map(c => c.charCodeAt(0));
-  const applySaltToChar = code => textToChars(salt).reduce((a,b) => a ^ b, code);
-  return encoded.match(/.{1,2}/g)
-    .map(hex => parseInt(hex, 16))
-    .map(applySaltToChar)
-    .map(charCode => String.fromCharCode(charCode))
-    .join('');
-}
-
-function getImportStringDetails(str, secret) {
+function getImportStringDetails(cipher, secret) {
   try {
-    const result = decipher(str, secret);
-    const links = JSON.parse(result);
-
-    console.log(links);
+    const links = getLinksFromCypher(cipher, secret);
     return {
       success: true,
       links,
@@ -41,18 +16,24 @@ function getImportStringDetails(str, secret) {
   }
 }
 
-async function getExportString(secret) {
-  const storedLinks = await getStoredLinks(secret);
-  const storedLinksStr = JSON.stringify(storedLinks);
-  return base64.encode(storedLinksStr);
+async function getExportString() {
+  return await AsyncStorage.getItem('links');
 }
 
-async function setStoredLinks(links) {
-  console.log("Saving link...");
+async function setStoredLinks(links, password) {
+  if (!links) {
+    await AsyncStorage.removeItem('links');
+    return;
+  }
+  console.log("Saving link...", {
+    links,
+    password
+  });
   try {
+    const ciphertext = CryptoJS.AES.encrypt(JSON.stringify(links), password).toString();
     await AsyncStorage.setItem(
       'links',
-      JSON.stringify(links)
+      ciphertext
     );
     console.log("Link saved!");
   } catch (error) {
@@ -61,71 +42,47 @@ async function setStoredLinks(links) {
   }
 };
 
+function getLinksFromCypher(cipher, secret) {
+  const bytes  = CryptoJS.AES.decrypt(cipher, secret);
+  const jsonText = bytes.toString(CryptoJS.enc.Utf8);
+  const links = JSON.parse(jsonText);
+  return links;
+}
+
 async function getStoredLinks(secret) {
   try {
-    console.log("Getting items...")
-    const value = await AsyncStorage.getItem('links');
-    console.log('value', value);
-    const result = decipher(value, secret);
-    console.log('result', result);
-    if (result !== null) {
-      const saved = JSON.parse(result);
-      if (!saved) {
+    const ciphertext = await AsyncStorage.getItem('links');
+    console.log('cipher', ciphertext);
+    if (ciphertext !== null) {
+      const links = getLinksFromCypher(ciphertext, secret);
+      if (!links) {
         return [];
       }
-      return saved;
+      return links;
     }
   } catch (error) {
     console.log("Error");
+    console.log(error);
   }
-  
-  return [];
+  console.log('No stored links...');
+  return null;
 };
 
-async function removePassword(password) {
-  console.log("Saving password...");
-  try {
-    await AsyncStorage.removeItem('password');
-    console.log("Password saved!");
-    return true;
-  } catch (error) {
-    console.log("Error saving link");
-    console.error(error);
-  }
-  return false;
-};
+async function isValidLogin(secret) {
+  const links = await getStoredLinks(secret);
+  return links !== null;
+}
 
-async function setPassword(password) {
-  console.log("Saving password...");
-  try {
-    await AsyncStorage.setItem(
-      'password',
-      password
-    );
-    console.log("Password saved!");
-    return true;
-  } catch (error) {
-    console.log("Error saving link");
-    console.error(error);
-  }
-  return false;
-};
-
-async function getPassword() {
-  try {
-    const value = await AsyncStorage.getItem('password');
-    return value;
-  } catch (error) {
-    console.log("Error");
-  }
-};
+async function hasStoredData() {
+  const links = await AsyncStorage.getItem('links');
+  return links !== null;
+}
 
 module.exports = {
   getImportStringDetails,
   getExportString,
-  setPassword,
-  removePassword,
-  getPassword,
+  isValidLogin,
+  hasStoredData,
   setStoredLinks,
   getStoredLinks
 }

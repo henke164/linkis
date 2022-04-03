@@ -7,7 +7,7 @@ import { setStoredLinks } from '../services/storage';
 
 const styles = getThemeStyles();
 
-const AddLinkScreen = ({ links, setLinks }) => {
+const AddLinkScreen = ({ links, setLinks, secret }) => {
   const [url, setUrl] = React.useState(null);
   const [isLoading, setIsLoading] = React.useState(false);
   const [urlErrorMessage, setUrlErrorMessage] = React.useState(null);
@@ -62,7 +62,7 @@ const AddLinkScreen = ({ links, setLinks }) => {
       ...meta
     });
 
-    await setStoredLinks(links);
+    await setStoredLinks(links, secret);
     
     setLinks([...links]);
 
