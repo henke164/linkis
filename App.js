@@ -1,10 +1,10 @@
 import React, { useEffect } from 'react';
-import { Clipboard } from 'react-native';
+import { Clipboard, Text } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { IconButton } from 'react-native-paper';
 import { navigationRef, navigate } from './components/RootNavigation';
-import BottomNav from './components/BottomNav';
+import LinkisView from './components/LinkisView';
 import AddLinkScreen from './pages/AddLinkScreen';
 import WebBrowserScreen from './pages/WebBrowserScreen';
 import LoginScreen from './pages/LoginScreen';
@@ -13,7 +13,6 @@ import { getThemeStyles } from './services/themeService';
 import { getStoredLinks } from './services/storage';
 
 const styles = getThemeStyles();
-
 const RootStack = createStackNavigator();
 
 function App() {
@@ -61,7 +60,7 @@ function App() {
               />
             ),
           }}>
-            {() => <BottomNav
+            {() => <LinkisView
               sceneIndex={sceneIndex}
               setSceneIndex={setSceneIndex}
               links={links}
@@ -74,7 +73,7 @@ function App() {
           <RootStack.Screen name="Add link">
             {() => <AddLinkScreen links={links} setLinks={setLinks} />}
           </RootStack.Screen>
-          <RootStack.Screen name="Browser" options={{
+          <RootStack.Screen name="WebBrowser" options={{
             headerRight: () => (
               <IconButton
                 onPress={() => {

@@ -12,7 +12,7 @@ const BrowseScreen = ({ links, setLinks }) => {
 
   async function play(link) {
     if (link.video) {
-      navigate('Browser', { url: link.video });
+      navigate('WebBrowser', { url: link.video });
       return;
     }
 

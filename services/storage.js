@@ -1,10 +1,31 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import base64 from 'react-native-base64';
 
-function getImportStringDetails(str) {
+function cipher(text, salt) {
+  const textToChars = text => text.split('').map(c => c.charCodeAt(0));
+  const byteHex = n => ("0" + Number(n).toString(16)).substr(-2);
+  const applySaltToChar = code => textToChars(salt).reduce((a,b) => a ^ b, code);
+
+  return text.split('')
+    .map(textToChars)
+    .map(applySaltToChar)
+    .map(byteHex)
+    .join('');
+}
+  
+function decipher(encoded, salt) {
+  const textToChars = text => text.split('').map(c => c.charCodeAt(0));
+  const applySaltToChar = code => textToChars(salt).reduce((a,b) => a ^ b, code);
+  return encoded.match(/.{1,2}/g)
+    .map(hex => parseInt(hex, 16))
+    .map(applySaltToChar)
+    .map(charCode => String.fromCharCode(charCode))
+    .join('');
+}
+
+function getImportStringDetails(str, secret) {
   try {
-    console.log(str);
-    const result = base64.decode(str);
+    const result = decipher(str, secret);
     const links = JSON.parse(result);
 
     console.log(links);
@@ -20,8 +41,8 @@ function getImportStringDetails(str) {
   }
 }
 
-async function getExportString() {
-  const storedLinks = await getStoredLinks();
+async function getExportString(secret) {
+  const storedLinks = await getStoredLinks(secret);
   const storedLinksStr = JSON.stringify(storedLinks);
   return base64.encode(storedLinksStr);
 }
@@ -40,12 +61,15 @@ async function setStoredLinks(links) {
   }
 };
 
-async function getStoredLinks() {
+async function getStoredLinks(secret) {
   try {
     console.log("Getting items...")
     const value = await AsyncStorage.getItem('links');
-    if (value !== null) {
-      const saved = JSON.parse(value);
+    console.log('value', value);
+    const result = decipher(value, secret);
+    console.log('result', result);
+    if (result !== null) {
+      const saved = JSON.parse(result);
       if (!saved) {
         return [];
       }

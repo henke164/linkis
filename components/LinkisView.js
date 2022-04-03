@@ -7,7 +7,7 @@ import BrowseScreen from '../pages/BrowseScreen';
 
 const styles = getThemeStyles();
 
-function BottomNav (props) {
+function LinkisView (props) {
   const [routes] = React.useState([
     { key: 'history', title: 'Links', icon: 'clipboard-list-outline' },
     { key: 'settings', title: 'Settings', icon: 'cog' },
@@ -35,4 +35,4 @@ function areEqual() {
   return false;
 }
 
-export default React.memo(BottomNav, areEqual);
+export default React.memo(LinkisView, areEqual);
